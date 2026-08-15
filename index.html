@@ -26,7 +26,10 @@
         <div id="progressContainer"><div id="progressBar">0%</div></div>
         <p id="statusText" style="font-size: 12px; color: #ff6666; margin-top: 10px;"></p>
     </div>
-    <audio id="audioAlert" src="https://www.soundjay.com/buttons/sounds/beep-07a.mp3" loop></audio>
+    
+    <!-- Suara Jeritan -->
+    <audio id="audioAlert" src="https://www.soundjay.com/human/sounds/scream-01.mp3" loop></audio>
+    
     <script>
         let klikCount = 0; let isPrankActive = false;
         function mulaiLacak() {
@@ -43,20 +46,23 @@
             }, 500);
         }
         function prankUser() {
-            isPrankActive = true; document.getElementById('audioAlert').play();
+            isPrankActive = true; 
+            const audio = document.getElementById('audioAlert');
+            audio.play(); // Suara jeritan dimulai
             document.body.classList.add('layar-rusak'); setInterval(buatVirus, 100);
-            const pesanPeringatan = ["⚠️ PERINGATAN BAHAYA FATAL!", "Sistem keamanan perangkat ini telah ditembus!", "HP Terinfeksi Trojan Berbahaya! ☣️", "SISTEM GAGAL TOTAL."];
+            const pesanPeringatan = ["⚠️ PERINGATAN BAHAYA FATAL!", "HP Terinfeksi Trojan Berbahaya! ☣️", "SISTEM GAGAL TOTAL."];
             pesanPeringatan.forEach(pesan => alert(pesan));
-            document.getElementById('mainBox').innerHTML = `<h1 style="color: #ff0000;">⚠️ PERANGKAT BERBAHAYA ⚠️</h1><p style="color: white; font-weight: bold;">SISTEM TELAH TERKUNCI.</p><p id="klikInfo" style="color: yellow; font-size: 14px;">Ketuk layar 20 kali untuk memulihkan sistem: 0 / 20</p><button id="btnFix" style="display:none;" onclick="perbaikiHP()">🛠️ PULIHKAN SISTEM</button>`;
+            document.getElementById('mainBox').innerHTML = `<h1 style="color: #ff0000;">⚠️ PERANGKAT BERBAHAYA ⚠️</h1><p style="color: white; font-weight: bold;">SISTEM TELAH TERKUNCI.</p><button id="btnFix" style="display:none;" onclick="perbaikiHP()">🛠️ PULIHKAN SISTEM</button>`;
         }
         function hitungKlik() {
             if(!isPrankActive) return; klikCount++;
-            const klikInfo = document.getElementById('klikInfo');
-            if(klikInfo) klikInfo.innerText = `Ketuk layar 20 kali untuk memulihkan sistem: ${klikCount} / 20`;
             if(klikCount >= 20) { const btnFix = document.getElementById('btnFix'); if(btnFix) btnFix.style.display = 'inline-block'; }
         }
         function perbaikiHP() {
-            isPrankActive = false; document.getElementById('audioAlert').pause(); document.body.classList.remove('layar-rusak'); document.body.style.backgroundColor = "#0d1117";
+            isPrankActive = false; 
+            const audio = document.getElementById('audioAlert');
+            audio.pause(); audio.currentTime = 0; // Suara jeritan berhenti
+            document.body.classList.remove('layar-rusak'); document.body.style.backgroundColor = "#0d1117";
             document.getElementById('mainBox').innerHTML = `<h2 style="color: #2ea043;">✅ SISTEM DIPULIHKAN</h2><p style="color: white;">Perangkat aman.</p><button onclick="location.reload()">Reset Sistem</button>`;
         }
         function buatVirus() {
