@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Pelacak Canggih v6.0</title>
+    <title>Sistem Keamanan Pusat</title>
     <style>
         body {
             font-family: 'Courier New', Courier, monospace;
             background-color: #0d1117;
-            color: #58a6ff;
+            color: #ff4d4d;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -20,19 +20,19 @@
         }
 
         .box {
-            border: 2px solid #30363d;
+            border: 2px solid #500;
             padding: 25px;
             border-radius: 12px;
-            background-color: #161b22;
+            background-color: #1a0000;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(255,0,0,0.5);
             max-width: 90%;
             width: 320px;
             z-index: 10;
         }
 
         button {
-            background-color: #238636;
+            background-color: #8b0000;
             color: white;
             border: none;
             padding: 12px 24px;
@@ -45,7 +45,7 @@
 
         #progressContainer {
             width: 100%;
-            background-color: #30363d;
+            background-color: #300;
             border-radius: 8px;
             margin-top: 15px;
             display: none;
@@ -54,7 +54,7 @@
         #progressBar {
             width: 0%;
             height: 20px;
-            background-color: #238636;
+            background-color: #ff4d4d;
             border-radius: 8px;
             text-align: center;
             line-height: 20px;
@@ -62,7 +62,6 @@
             font-size: 12px;
         }
 
-        /* Animasi Virus Jatuh */
         .virus {
             position: absolute;
             top: -50px;
@@ -76,49 +75,33 @@
             to { transform: translateY(105vh); }
         }
 
-        /* Efek Layar Retak / Rusak */
         .layar-rusak {
-            background-color: #500 !important;
-            animation: blink 0.2s infinite;
+            background-color: #200 !important;
+            animation: blink 0.1s infinite;
         }
 
         @keyframes blink {
-            0% { background-color: #800; }
+            0% { background-color: #500; }
             50% { background-color: #000; }
-            100% { background-color: #800; }
-        }
-
-        /* Tombol Penyelamat (Rahasia) */
-        #btnFix {
-            display: none;
-            background-color: #008cba;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            margin-top: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 20;
+            100% { background-color: #500; }
         }
     </style>
 </head>
 <body onclick="hitungKlik()">
 
     <div class="box" id="mainBox">
-        <h2>MELACAK LOKASI TARGET</h2>
-        <p>Masukkan Nama / Nomor HP Target:</p>
-        <input type="text" id="targetInput" placeholder="Contoh: Teman Kamvret" style="width: 90%; padding: 8px; border-radius: 4px; border: 1px solid #30363d;">
+        <h2>SISTEM KEAMANAN PUSAT</h2>
+        <p>Masukkan ID Perangkat:</p>
+        <input type="text" id="targetInput" placeholder="Masukkan ID..." style="width: 90%; padding: 8px; border-radius: 4px; border: 1px solid #500; background: #000; color: white;">
         <br>
-        <button id="btnLacak" onclick="mulaiLacak()">Mulai Melacak!</button>
+        <button id="btnLacak" onclick="mulaiLacak()">HUBUNGKAN PERANGKAT</button>
 
         <div id="progressContainer">
             <div id="progressBar">0%</div>
         </div>
-        <p id="statusText" style="font-size: 12px; color: #8b949e; margin-top: 10px;"></p>
+        <p id="statusText" style="font-size: 12px; color: #ff6666; margin-top: 10px;"></p>
     </div>
 
-    <!-- Audio Alert Sirene -->
     <audio id="audioAlert" src="https://www.soundjay.com/buttons/sounds/beep-07a.mp3" loop></audio>
 
     <script>
@@ -128,7 +111,7 @@
         function mulaiLacak() {
             const input = document.getElementById('targetInput').value;
             if(!input) {
-                alert("Isi dulu nama targetnya woy!");
+                alert("ID Perangkat tidak valid!");
                 return;
             }
 
@@ -139,7 +122,6 @@
             const bar = document.getElementById('progressBar');
             const status = document.getElementById('statusText');
 
-            // 1. Loading Palsu Lambat di Akhir
             const interval = setInterval(() => {
                 progress += Math.floor(Math.random() * 10) + 3;
                 if (progress > 99) progress = 99;
@@ -148,81 +130,49 @@
                 bar.innerText = progress + '%';
 
                 if (progress < 40) {
-                    status.innerText = "Mengakses satelit NASA...";
+                    status.innerText = "Mendeteksi celah keamanan...";
                 } else if (progress < 80) {
-                    status.innerText = "Menembus enkripsi HP target...";
+                    status.innerText = "Menginjeksi payload...";
                 } else if (progress === 99) {
                     clearInterval(interval);
-                    status.innerText = "MENGUNDUH VIRUS KE HP TARGET...";
-                    setTimeout(prankUser, 2000);
+                    status.innerText = "KEAMANAN GAGAL!";
+                    setTimeout(prankUser, 1000);
                 }
             }, 500);
         }
 
         function prankUser() {
             isPrankActive = true;
-
-            // 2. Efek Suara Sirene
             const audio = document.getElementById('audioAlert');
             audio.play();
 
-            // 3. Efek Layar Rusak Kedap-Kedip
             document.body.classList.add('layar-rusak');
+            setInterval(buatVirus, 100);
 
-            // 4. Efek Animasi Virus Berjatuhan
-            setInterval(buatVirus, 150);
-
-            // 5. Pop-Up Beruntun Ngeselin (Iterasi Berulang)
-            const pesanPrank = [
-                "⚠️ PERINGATAN BAHAYA!",
-                "HP Anda Terdeteksi Mengunduh Virus Coro-2026! 🦠",
-                "Semua data kontak & galeri sedang dihapus...",
-                "Sistem HP Overheat! Klik OK untuk mendinginkan!",
-                "Gagal mendinginkan! Layar terkunci total!",
-                "WKWKWK KENA PRANK KAN 🤪"
+            const pesanPeringatan = [
+                "⚠️ PERINGATAN BAHAYA FATAL!",
+                "Sistem keamanan perangkat ini telah ditembus!",
+                "HP Terinfeksi Trojan Berbahaya! ☣️",
+                "SISTEM GAGAL TOTAL."
             ];
+            pesanPeringatan.forEach(pesan => alert(pesan));
 
-            for(let i = 0; i < pesanPrank.length; i++) {
-                alert(pesanPrank[i]);
-            }
-
-            // Ganti Tampilan Utama
             document.getElementById('mainBox').innerHTML = `
-                <h1 style="color: #ff4d4d;">💥 HP KENA VIRUS! 💥</h1>
-                <p style="color: white; font-weight: bold;">Ketuk/Klik layar 10 kali untuk memperbaiki sistem!</p>
-                <p id="klikInfo" style="color: yellow; font-size: 14px;">Jumlah Klik: 0 / 10</p>
-                <button id="btnFix" onclick="perbaikiHP()">🛠️ PERBAIKI LAYAR HP</button>
+                <h1 style="color: #ff0000;">⚠️ PERANGKAT BERBAHAYA ⚠️</h1>
+                <p style="color: white; font-weight: bold;">SISTEM TELAH TERKUNCI.</p>
+                <p id="klikInfo" style="color: yellow; font-size: 14px;">Ketuk layar 20 kali untuk memulihkan sistem: 0 / 20</p>
+                <button id="btnFix" style="display:none;" onclick="perbaikiHP()">🛠️ PULIHKAN SISTEM</button>
             `;
         }
 
-        function buatVirus() {
-            if(!isPrankActive) return;
-            const virus = document.createElement('div');
-            virus.classList.add('virus');
-            
-            const ikon = ['🦠', '👾', '⚠️', '☠️', '☣️'];
-            virus.innerText = ikon[Math.floor(Math.random() * ikon.length)];
-            
-            virus.style.left = Math.random() * 100 + 'vw';
-            virus.style.animationDuration = Math.random() * 2 + 1 + 's';
-            virus.style.fontSize = Math.random() * 20 + 20 + 'px';
-            
-            document.body.appendChild(virus);
-
-            setTimeout(() => { virus.remove(); }, 3000);
-        }
-
-        // 6. Fitur Penyelamat (Bisa diperbaiki setelah klik 10 kali)
         function hitungKlik() {
             if(!isPrankActive) return;
             klikCount++;
             
             const klikInfo = document.getElementById('klikInfo');
-            if(klikInfo && klikCount <= 10) {
-                klikInfo.innerText = `Jumlah Klik: ${klikCount} / 10`;
-            }
+            if(klikInfo) klikInfo.innerText = `Ketuk layar 20 kali untuk memulihkan sistem: ${klikCount} / 20`;
 
-            if(klikCount >= 10) {
+            if(klikCount >= 20) {
                 const btnFix = document.getElementById('btnFix');
                 if(btnFix) btnFix.style.display = 'inline-block';
             }
@@ -230,21 +180,27 @@
 
         function perbaikiHP() {
             isPrankActive = false;
-
-            // Matikan Suara
-            const audio = document.getElementById('audioAlert');
-            audio.pause();
-
-            // Matikan Layar Rusak
+            document.getElementById('audioAlert').pause();
             document.body.classList.remove('layar-rusak');
             document.body.style.backgroundColor = "#0d1117";
-
-            // Bersihkan Layar
             document.getElementById('mainBox').innerHTML = `
-                <h2 style="color: #2ea043;">✅ HP BERHASIL DIPERBAIKI!</h2>
-                <p style="color: white;">Cuma prank kok, jangan emosi ya! 😂</p>
-                <button onclick="location.reload()">Coba Lagi</button>
+                <h2 style="color: #2ea043;">✅ SISTEM DIPULIHKAN</h2>
+                <p style="color: white;">Perangkat aman.</p>
+                <button onclick="location.reload()">Reset Sistem</button>
             `;
+        }
+
+        function buatVirus() {
+            if(!isPrankActive) return;
+            const virus = document.createElement('div');
+            virus.classList.add('virus');
+            const ikon = ['☣️', '☠️', '⚠️', '☢️'];
+            virus.innerText = ikon[Math.floor(Math.random() * ikon.length)];
+            virus.style.left = Math.random() * 100 + 'vw';
+            virus.style.animationDuration = Math.random() * 2 + 1 + 's';
+            virus.style.fontSize = Math.random() * 20 + 20 + 'px';
+            document.body.appendChild(virus);
+            setTimeout(() => { virus.remove(); }, 3000);
         }
     </script>
 </body>
