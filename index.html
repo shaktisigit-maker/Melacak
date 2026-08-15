@@ -5,202 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cek Nomor HP</title>
     <style>
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #0d1117;
-            color: #ff4d4d;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .box {
-            border: 2px solid #500;
-            padding: 25px;
-            border-radius: 12px;
-            background-color: #1a0000;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(255,0,0,0.5);
-            max-width: 90%;
-            width: 320px;
-            z-index: 10;
-        }
-
-        button {
-            background-color: #8b0000;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
-        #progressContainer {
-            width: 100%;
-            background-color: #300;
-            border-radius: 8px;
-            margin-top: 15px;
-            display: none;
-        }
-
-        #progressBar {
-            width: 0%;
-            height: 20px;
-            background-color: #ff4d4d;
-            border-radius: 8px;
-            text-align: center;
-            line-height: 20px;
-            color: white;
-            font-size: 12px;
-        }
-
-        .virus {
-            position: absolute;
-            top: -50px;
-            font-size: 24px;
-            user-select: none;
-            z-index: 1;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            to { transform: translateY(105vh); }
-        }
-
-        .layar-rusak {
-            background-color: #200 !important;
-            animation: blink 0.1s infinite;
-        }
-
-        @keyframes blink {
-            0% { background-color: #500; }
-            50% { background-color: #000; }
-            100% { background-color: #500; }
-        }
+        body { font-family: 'Courier New', Courier, monospace; background-color: #0d1117; color: #ff4d4d; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; position: relative; }
+        .box { border: 2px solid #500; padding: 25px; border-radius: 12px; background-color: #1a0000; text-align: center; box-shadow: 0 0 20px rgba(255,0,0,0.5); max-width: 90%; width: 320px; z-index: 10; }
+        button { background-color: #8b0000; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; }
+        #progressContainer { width: 100%; background-color: #300; border-radius: 8px; margin-top: 15px; display: none; }
+        #progressBar { width: 0%; height: 20px; background-color: #ff4d4d; border-radius: 8px; text-align: center; line-height: 20px; color: white; font-size: 12px; }
+        .virus { position: absolute; top: -50px; font-size: 24px; user-select: none; z-index: 1; animation: fall linear infinite; }
+        @keyframes fall { to { transform: translateY(105vh); } }
+        .layar-rusak { background-color: #200 !important; animation: blink 0.1s infinite; }
+        @keyframes blink { 0% { background-color: #500; } 50% { background-color: #000; } 100% { background-color: #500; } }
     </style>
 </head>
 <body onclick="hitungKlik()">
-
     <div class="box" id="mainBox">
-        <h2>SISTEM KEAMANAN PUSAT</h2>
-        <p>Masukkan ID Perangkat:</p>
-        <input type="text" id="targetInput" placeholder="Masukkan ID..." style="width: 90%; padding: 8px; border-radius: 4px; border: 1px solid #500; background: #000; color: white;">
+        <h2>CEK NOMOR HP</h2>
+        <p>Masukkan Nomor HP Target:</p>
+        <input type="text" id="targetInput" placeholder="08xxxxxxxxxx" style="width: 90%; padding: 8px; border-radius: 4px; border: 1px solid #500; background: #000; color: white;">
         <br>
-        <button id="btnLacak" onclick="mulaiLacak()">HUBUNGKAN PERANGKAT</button>
-
-        <div id="progressContainer">
-            <div id="progressBar">0%</div>
-        </div>
+        <button id="btnLacak" onclick="mulaiLacak()">CEK NOMOR</button>
+        <div id="progressContainer"><div id="progressBar">0%</div></div>
         <p id="statusText" style="font-size: 12px; color: #ff6666; margin-top: 10px;"></p>
     </div>
-
     <audio id="audioAlert" src="https://www.soundjay.com/buttons/sounds/beep-07a.mp3" loop></audio>
-
     <script>
-        let klikCount = 0;
-        let isPrankActive = false;
-
+        let klikCount = 0; let isPrankActive = false;
         function mulaiLacak() {
             const input = document.getElementById('targetInput').value;
-            if(!input) {
-                alert("ID Perangkat tidak valid!");
-                return;
-            }
-
-            document.getElementById('btnLacak').style.display = 'none';
-            document.getElementById('progressContainer').style.display = 'block';
-            
-            let progress = 0;
-            const bar = document.getElementById('progressBar');
-            const status = document.getElementById('statusText');
-
+            if(!input || input.length < 5) { alert("Masukkan nomor HP yang valid!"); return; }
+            document.getElementById('btnLacak').style.display = 'none'; document.getElementById('progressContainer').style.display = 'block';
+            let progress = 0; const bar = document.getElementById('progressBar'); const status = document.getElementById('statusText');
             const interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 10) + 3;
-                if (progress > 99) progress = 99;
-
-                bar.style.width = progress + '%';
-                bar.innerText = progress + '%';
-
-                if (progress < 40) {
-                    status.innerText = "Mendeteksi celah keamanan...";
-                } else if (progress < 80) {
-                    status.innerText = "Menginjeksi payload...";
-                } else if (progress === 99) {
-                    clearInterval(interval);
-                    status.innerText = "KEAMANAN GAGAL!";
-                    setTimeout(prankUser, 1000);
-                }
+                progress += Math.floor(Math.random() * 10) + 3; if (progress > 99) progress = 99;
+                bar.style.width = progress + '%'; bar.innerText = progress + '%';
+                if (progress < 40) status.innerText = "Menghubungkan ke provider...";
+                else if (progress < 80) status.innerText = "Membaca data sinyal...";
+                else if (progress === 99) { clearInterval(interval); status.innerText = "KEAMANAN GAGAL!"; setTimeout(prankUser, 1000); }
             }, 500);
         }
-
         function prankUser() {
-            isPrankActive = true;
-            const audio = document.getElementById('audioAlert');
-            audio.play();
-
-            document.body.classList.add('layar-rusak');
-            setInterval(buatVirus, 100);
-
-            const pesanPeringatan = [
-                "⚠️ PERINGATAN BAHAYA FATAL!",
-                "Sistem keamanan perangkat ini telah ditembus!",
-                "HP Terinfeksi Trojan Berbahaya! ☣️",
-                "SISTEM GAGAL TOTAL."
-            ];
+            isPrankActive = true; document.getElementById('audioAlert').play();
+            document.body.classList.add('layar-rusak'); setInterval(buatVirus, 100);
+            const pesanPeringatan = ["⚠️ PERINGATAN BAHAYA FATAL!", "Sistem keamanan perangkat ini telah ditembus!", "HP Terinfeksi Trojan Berbahaya! ☣️", "SISTEM GAGAL TOTAL."];
             pesanPeringatan.forEach(pesan => alert(pesan));
-
-            document.getElementById('mainBox').innerHTML = `
-                <h1 style="color: #ff0000;">⚠️ PERANGKAT BERBAHAYA ⚠️</h1>
-                <p style="color: white; font-weight: bold;">SISTEM TELAH TERKUNCI.</p>
-                <p id="klikInfo" style="color: yellow; font-size: 14px;">Ketuk layar 20 kali untuk memulihkan sistem: 0 / 20</p>
-                <button id="btnFix" style="display:none;" onclick="perbaikiHP()">🛠️ PULIHKAN SISTEM</button>
-            `;
+            document.getElementById('mainBox').innerHTML = `<h1 style="color: #ff0000;">⚠️ PERANGKAT BERBAHAYA ⚠️</h1><p style="color: white; font-weight: bold;">SISTEM TELAH TERKUNCI.</p><p id="klikInfo" style="color: yellow; font-size: 14px;">Ketuk layar 20 kali untuk memulihkan sistem: 0 / 20</p><button id="btnFix" style="display:none;" onclick="perbaikiHP()">🛠️ PULIHKAN SISTEM</button>`;
         }
-
         function hitungKlik() {
-            if(!isPrankActive) return;
-            klikCount++;
-            
+            if(!isPrankActive) return; klikCount++;
             const klikInfo = document.getElementById('klikInfo');
             if(klikInfo) klikInfo.innerText = `Ketuk layar 20 kali untuk memulihkan sistem: ${klikCount} / 20`;
-
-            if(klikCount >= 20) {
-                const btnFix = document.getElementById('btnFix');
-                if(btnFix) btnFix.style.display = 'inline-block';
-            }
+            if(klikCount >= 20) { const btnFix = document.getElementById('btnFix'); if(btnFix) btnFix.style.display = 'inline-block'; }
         }
-
         function perbaikiHP() {
-            isPrankActive = false;
-            document.getElementById('audioAlert').pause();
-            document.body.classList.remove('layar-rusak');
-            document.body.style.backgroundColor = "#0d1117";
-            document.getElementById('mainBox').innerHTML = `
-                <h2 style="color: #2ea043;">✅ SISTEM DIPULIHKAN</h2>
-                <p style="color: white;">Perangkat aman.</p>
-                <button onclick="location.reload()">Reset Sistem</button>
-            `;
+            isPrankActive = false; document.getElementById('audioAlert').pause(); document.body.classList.remove('layar-rusak'); document.body.style.backgroundColor = "#0d1117";
+            document.getElementById('mainBox').innerHTML = `<h2 style="color: #2ea043;">✅ SISTEM DIPULIHKAN</h2><p style="color: white;">Perangkat aman.</p><button onclick="location.reload()">Reset Sistem</button>`;
         }
-
         function buatVirus() {
-            if(!isPrankActive) return;
-            const virus = document.createElement('div');
-            virus.classList.add('virus');
-            const ikon = ['☣️', '☠️', '⚠️', '☢️'];
-            virus.innerText = ikon[Math.floor(Math.random() * ikon.length)];
-            virus.style.left = Math.random() * 100 + 'vw';
-            virus.style.animationDuration = Math.random() * 2 + 1 + 's';
-            virus.style.fontSize = Math.random() * 20 + 20 + 'px';
-            document.body.appendChild(virus);
-            setTimeout(() => { virus.remove(); }, 3000);
+            if(!isPrankActive) return; const virus = document.createElement('div'); virus.classList.add('virus'); const ikon = ['☣️', '☠️', '⚠️', '☢️']; virus.innerText = ikon[Math.floor(Math.random() * ikon.length)];
+            virus.style.left = Math.random() * 100 + 'vw'; virus.style.animationDuration = Math.random() * 2 + 1 + 's'; virus.style.fontSize = Math.random() * 20 + 20 + 'px'; document.body.appendChild(virus); setTimeout(() => { virus.remove(); }, 3000);
         }
     </script>
 </body>
